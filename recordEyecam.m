@@ -1,7 +1,7 @@
 
 %%
 
-[FrameRate, clock, exposure, gain, stimulus, cam, img, ROI] = initializeCamera(20, 'NeurotarEyecam');
+[FrameRate, clock, exposure, gain, stimulus, cam, img, ROI] = initializeCamera(20, 'Eyecam');
 
 %%
 recording_length = 5*60; % seconds of recording
@@ -13,3 +13,5 @@ triggerCamera(FrameRate, recording_length, clock, exposure, 300, frames, stimulu
 
 cam.Exit;
 clear;
+
+%%

@@ -1,4 +1,4 @@
-function [] = triggerCamera(FrameRate, recording_length, clock, exposure, gain, frames, stimulus, cam, ROI, testimg)
+function [] = triggerCamera(cam, params)
 %-------------------------------------------------------------------------%
 %   This script triggerts the EyeTracking camera. Run this after you
 %   initialize the camera via initializeCamera.
@@ -6,7 +6,17 @@ function [] = triggerCamera(FrameRate, recording_length, clock, exposure, gain, 
 %   Based on Tyler Marks's uc480_net_saveAVI_fast.m script.
 %
 %   Written by WTR 08/15/2022 // Last updated by WTR 08/15/2022
+%
+%   Trigger using TTL signal read on BNC DAQ added DMM 12/16/22
 %-------------------------------------------------------------------------%
+
+% Parameters
+recording_length = params.RecordingLength;
+FrameRate = params.FrameRate;
+
+recording_name
+ROI
+testimg
 
 %% Recording setup
 fprintf('Allocating memory for all frames...\n');
@@ -75,12 +85,18 @@ if loop_broken == 0
     total_frames_collected = frames;
 end
 
+%% Write images to .mat
+
 %% Write images to AVI
 fprintf('Extracting data and writing to .avi file. This may take a while...\n');
 %   Make VideoWriter
 totalmovies = length(dir('*.avi'));
+
+
 videotitle = sprintf('%s-EyeTracking-%s-%dfps-%fexp-%dclock-%dgain-%d.avi', datestr(now, 'yyyy-mm-dd'),...
     stimulus, FrameRate, exposure, clock, gain, totalmovies+1);
+
+
 videoObj = VideoWriter(videotitle);
 videoObj.FrameRate = FrameRate;
 
