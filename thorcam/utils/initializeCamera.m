@@ -1,4 +1,4 @@
-function [FrameRate, clock, exposure, gain, cam, img, ROI] = initializeCamera(RecordingLength, FrameRate, ClockRate, Exposure, Gain, SelectROI)
+function [cam, params] = initializeCamera(RecordingLength, FrameRate, ClockRate, Exposure, Gain, SelectROI)
 %   This script initializes the EyeTracking camera. Run this before you
 %   trigger the recording via triggerCamera.
 %
@@ -10,8 +10,6 @@ function [FrameRate, clock, exposure, gain, cam, img, ROI] = initializeCamera(Re
 %   Written by WTR 08/15/2022 // Last updated by WTR 08/15/2022
 %
 %   Rewritten 
-
-
 
 %--------------------------------------------------------------------------
 % Default values
@@ -52,16 +50,14 @@ params = struct;
 params.FrameRate = FrameRate;
 params.ClockRate = ClockRate;
 params.RecordingLength = RecordingLength;
-params.FrameLength
-
-
+params.NumFrames = int(ceil(FrameRate*RecordingLength));
 
 % Need to subsample the images if the frame rate is high.
-if FrameRate==60
+if FrameRate>30
     doSubsample = True;
 end
 
-params.NumFrames = int(ceil(FrameRate*RecordingLength));
+
 
 
 %--------------------------------------------------------------------------
