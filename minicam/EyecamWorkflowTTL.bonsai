@@ -1,23 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<WorkflowBuilder Version="2.7.1"
+<WorkflowBuilder Version="2.7.3"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns:vid="clr-namespace:Bonsai.Video;assembly=Bonsai.Video"
+                 xmlns:ard="clr-namespace:Bonsai.Arduino;assembly=Bonsai.Arduino"
                  xmlns:rx="clr-namespace:Bonsai.Reactive;assembly=Bonsai.Core"
                  xmlns:io="clr-namespace:Bonsai.IO;assembly=Bonsai.System"
                  xmlns:cv="clr-namespace:Bonsai.Vision;assembly=Bonsai.Vision"
-                 xmlns:ard="clr-namespace:Bonsai.Arduino;assembly=Bonsai.Arduino"
+                 xmlns:p1="clr-namespace:OpenCV.Net;assembly=OpenCV.Net"
                  xmlns="https://bonsai-rx.org/2018/workflow">
   <Workflow>
     <Nodes>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="vid:VideoCaptureDevice">
-          <vid:Index>1</vid:Index>
+          <vid:Index>0</vid:Index>
           <vid:CaptureProperties />
         </Combinator>
       </Expression>
       <Expression xsi:type="Combinator">
-        <Combinator xsi:type="ard:DigitalOutput">
-          <ard:Pin>5</ard:Pin>
+        <Combinator xsi:type="rx:DelaySubscription">
+          <rx:DueTime>PT0S</rx:DueTime>
         </Combinator>
       </Expression>
       <Expression xsi:type="Combinator">
@@ -39,7 +40,7 @@
         </PropertyMappings>
       </Expression>
       <Expression xsi:type="io:CsvWriter">
-        <io:FileName>D:\eyecam_recordings\230209_DMM_DMM001_test\230209_DMM_DMM001_test_04.csv</io:FileName>
+        <io:FileName>C:\Users\Goard Lab\Desktop\eyecam_recordings\230418_DMM_test_TTL_test\230418_DMM_test_TTL_test_08.csv</io:FileName>
         <io:Append>false</io:Append>
         <io:Overwrite>false</io:Overwrite>
         <io:Suffix>None</io:Suffix>
@@ -59,7 +60,7 @@
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="cv:VideoWriter">
-          <cv:FileName>D:\eyecam_recordings\230209_DMM_DMM001_test\230209_DMM_DMM001_test_04.avi</cv:FileName>
+          <cv:FileName>C:\Users\Goard Lab\Desktop\eyecam_recordings\230418_DMM_test_TTL_test\230418_DMM_test_TTL_test_08.avi</cv:FileName>
           <cv:Suffix>None</cv:Suffix>
           <cv:Buffered>true</cv:Buffered>
           <cv:Overwrite>false</cv:Overwrite>
@@ -72,6 +73,29 @@
           <cv:ResizeInterpolation>NearestNeighbor</cv:ResizeInterpolation>
         </Combinator>
       </Expression>
+      <Expression xsi:type="rx:Visualizer">
+        <Description />
+        <Workflow>
+          <Nodes>
+            <Expression xsi:type="WorkflowInput">
+              <Name>Source1</Name>
+            </Expression>
+            <Expression xsi:type="WorkflowOutput" />
+          </Nodes>
+          <Edges>
+            <Edge From="0" To="1" Label="Source1" />
+          </Edges>
+        </Workflow>
+      </Expression>
+      <Expression xsi:type="rx:BehaviorSubject" TypeArguments="p1:IplImage" />
+      <Expression xsi:type="Disable">
+        <Builder xsi:type="Combinator">
+          <Combinator xsi:type="ard:DigitalOutput">
+            <ard:PortName>TTL_Arduino</ard:PortName>
+            <ard:Pin>5</ard:Pin>
+          </Combinator>
+        </Builder>
+      </Expression>
       <Expression xsi:type="GroupWorkflow">
         <Name>recording_info</Name>
         <Description />
@@ -82,7 +106,7 @@
             </Expression>
             <Expression xsi:type="Combinator">
               <Combinator xsi:type="StringProperty">
-                <Value>DMM001</Value>
+                <Value>test_TTL</Value>
               </Combinator>
             </Expression>
             <Expression xsi:type="Combinator">
@@ -105,7 +129,7 @@
             </Expression>
             <Expression xsi:type="Combinator">
               <Combinator xsi:type="StringProperty">
-                <Value>230209</Value>
+                <Value>230418</Value>
               </Combinator>
             </Expression>
             <Expression xsi:type="ExternalizedMapping">
@@ -158,7 +182,7 @@
             </Expression>
             <Expression xsi:type="Combinator">
               <Combinator xsi:type="StringProperty">
-                <Value>D:\eyecam_recordings</Value>
+                <Value>C:\Users\Goard Lab\Desktop\eyecam_recordings</Value>
               </Combinator>
             </Expression>
             <Expression xsi:type="ExternalizedMapping">
@@ -166,7 +190,7 @@
             </Expression>
             <Expression xsi:type="Combinator">
               <Combinator xsi:type="StringProperty">
-                <Value>04</Value>
+                <Value>09</Value>
               </Combinator>
             </Expression>
             <Expression xsi:type="Combinator">
@@ -249,16 +273,16 @@
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="ard:CreateArduino">
           <ard:Name>TTL_Arduino</ard:Name>
-          <ard:PortName>COM1</ard:PortName>
+          <ard:PortName>COM5</ard:PortName>
           <ard:BaudRate>9600</ard:BaudRate>
-          <ard:SamplingInterval>5</ard:SamplingInterval>
+          <ard:SamplingInterval>10</ard:SamplingInterval>
         </Combinator>
       </Expression>
     </Nodes>
     <Edges>
       <Edge From="0" To="1" Label="Source1" />
       <Edge From="1" To="2" Label="Source1" />
-      <Edge From="1" To="13" Label="Source1" />
+      <Edge From="1" To="13" Label="Source2" />
       <Edge From="2" To="3" Label="Source1" />
       <Edge From="3" To="8" Label="Source1" />
       <Edge From="4" To="5" Label="Source1" />
@@ -268,7 +292,9 @@
       <Edge From="9" To="10" Label="Source1" />
       <Edge From="10" To="11" Label="Source1" />
       <Edge From="11" To="12" Label="Source1" />
-      <Edge From="12" To="13" Label="Source2" />
+      <Edge From="12" To="13" Label="Source1" />
+      <Edge From="13" To="14" Label="Source1" />
+      <Edge From="15" To="16" Label="Source1" />
     </Edges>
   </Workflow>
 </WorkflowBuilder>
